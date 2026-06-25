@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribuidora RF - Panel de Productos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    /// ver si los colores son los mismos del otro archivo
+                    
+                    colors: {
+                        'smoke-white': '#F9FAFB',        // Blanco humo (fondo general)
+                        'pro-blue': '#2563EB',           // Azul profesional (elementos principales)
+                        'light-blue': '#60A5FA',         // Azul claro (suavizar elementos)
+                        'soft-gray': '#94A3B8',          // Gris suave (equilibrio neutral)
+                        'warm-green': '#22C55E',         // Verde cálido (acentos positivos)
+                        'light-teal': '#06B6D4',         // Turquesa claro (variedad)
+                        'dark-teal': '#1E3A8A',          // Azul petróleo (solo acentos mínimos)
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav-liquid-glass.css') }}">
+</head>
+<body class="bg-smoke-white min-h-screen">
+    
+    <!-- Include Navigation Component -->
+    {% include 'components/nav.html' %}
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 pt-28 pb-8">
+        
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-6">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} flex items-center p-4 mb-4 rounded-lg 
+                                    {{ 'bg-green-100 border border-green-400 text-green-700' if category == 'success' 
+                                       else 'bg-red-100 border border-red-400 text-red-700' if category == 'error'
+                                       else 'bg-blue-100 border border-blue-400 text-blue-700' }}">
+                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                {% if category == 'success' %}
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                {% elif category == 'error' %}
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                {% else %}
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                {% endif %}
+                            </svg>
+                            <span class="font-medium">{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Header Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-dark-teal mb-2">Panel de <span class="text-light-blue">Productos</span> Distribuidora RF</h1>
+                    <p class="text-soft-gray">Gestión completa del catálogo de repuestos y autopartes</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <button id="openModalBtn" class="bg-pro-blue hover:bg-dark-teal text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-lg flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        Agregar Producto
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Total Productos -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-pro-blue">
+                <div class="flex items-center">
+                    <div class="bg-pro-blue bg-opacity-10 rounded-full p-3 mr-4">
+                        <svg class="w-8 h-8 text-pro-blue" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 7H18V6C18 5.45 17.55 5 17 5H7C6.45 5 6 5.45 6 6V7H5C3.9 7 3 7.9 3 9V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V9C21 7.9 20.1 7 19 7Z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-dark-teal">{{ productos|length }}</p>
+                        <p class="text-soft-gray text-sm">Total Productos</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stock Total -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-warm-green">
+                <div class="flex items-center">
+                    <div class="bg-warm-green bg-opacity-10 rounded-full p-3 mr-4">
+                        <svg class="w-8 h-8 text-warm-green" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 13.5L8.5 16 12 18.5 15.5 16 12 13.5z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-dark-teal">{{ total_stock }}</p>
+                        <p class="text-soft-gray text-sm">Unidades en Stock</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Valor Inventario -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-light-teal">
+                <div class="flex items-center">
+                    <div class="bg-light-teal bg-opacity-10 rounded-full p-3 mr-4">
+                        <svg class="w-8 h-8 text-light-teal" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-bold text-dark-teal">${{ "{:,.0f}".format(valor_inventario) }}</p>
+                        <p class="text-soft-gray text-sm">Valor Inventario</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tabla de Productos -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-pro-blue to-dark-teal px-6 py-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z"/>
+                        <path d="M7 7H17V9H7V7ZM7 11H17V13H7V11ZM7 15H17V17H7V15Z"/>
+                    </svg>
+                    Listado de Productos
+                </h2>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                            
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% if productos %}
+                            {% for producto in productos %}
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">#{{ producto.id }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <div class="h-10 w-10 rounded-full bg-gradient-to-br from-pro-blue to-light-blue flex items-center justify-center">
+                                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M19 7H18V6C18 5.45 17.55 5 17 5H7C6.45 5 6 5.45 6 6V7H5C3.9 7 3 7.9 3 9V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V9C21 7.9 20.1 7 19 7Z"/>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">{{ producto.nombre }}</div>
+                                            {% if producto.peligroso %}
+                                                <div class="text-xs text-red-600 flex items-center mt-1">
+                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path d="M12 2L13.09 7.26L18 4L14.74 9.09L20 10L14.74 10.91L18 16L13.09 12.74L12 18L10.91 12.74L6 16L9.26 10.91L4 10L9.26 9.09L6 4L10.91 7.26L12 2Z"/>
+                                                    </svg>
+                                                    Producto Peligroso
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pro-blue bg-opacity-10 text-pro-blue">
+                                        {% if categorias %}
+                                            {{ categorias.get(producto.fk_categoria, 'Sin categoría') }}
+                                        {% else %}
+                                            Categoría {{ producto.fk_categoria }}
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-semibold text-gray-900">${{ "{:,.2f}".format(producto.precio) }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium text-gray-900">{{ producto.stock }} unidades</div>
+                                        {% if producto.stock < 10 %}
+                                            <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                Stock Bajo
+                                            </span>
+                                        {% elif producto.stock < 30 %}
+                                            <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                Stock Medio
+                                            </span>
+                                        {% else %}
+                                            <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Stock Alto
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                              
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {% if producto.stock > 0 %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warm-green bg-opacity-10 text-warm-green">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                            </svg>
+                                            Disponible
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                            </svg>
+                                            Agotado
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <button class="text-pro-blue hover:text-dark-teal transition-colors" title="Editar">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                            </svg>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-800 transition-colors" title="Eliminar">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8" class="px-6 py-12 text-center">
+                                    <div class="text-gray-500">
+                                        <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                                        </svg>
+                                        <h3 class="text-lg font-medium text-gray-900 mb-2">No hay productos</h3>
+                                        <p class="text-gray-500">Agrega tu primer producto para comenzar a gestionar el inventario.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    
+
+        
+
+         
+
+    </main>
+
+    <!-- Modal para Agregar/Editar Producto (oculto por defecto) -->
+    <div id="productoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-2xl p-8 m-4 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-dark-teal">Agregar Producto</h3>
+                <button id="closeModalBtn" class="text-soft-gray hover:text-dark-teal">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <form id="addProductForm" class="space-y-4" action="/products/add" method="POST" enctype="multipart/form-data" novalidate>
+                <div>
+                    <label class="block text-sm font-medium text-dark-teal mb-2">Nombre del Producto</label>
+                    <input type="text" name="nombre" required
+                           class="w-full border border-soft-gray rounded-lg px-4 py-2 focus:ring-2 focus:ring-pro-blue outline-none transition-colors" 
+                           placeholder="Ej: Detergente Premium">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-dark-teal mb-2">Observaciones <span class="text-xs text-soft-gray">(Opcional)</span></label>
+                    <textarea name="descripcion" 
+                              class="w-full border border-soft-gray rounded-lg px-4 py-2 focus:ring-2 focus:ring-pro-blue outline-none transition-colors" 
+                              rows="3" placeholder="Notas adicionales sobre el producto"></textarea>
+                    <p class="text-xs text-soft-gray mt-1">Este campo es solo informativo y no se guardará en la base de datos</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-dark-teal mb-2">Imagen del Producto <span class="text-xs text-soft-gray">(Opcional)</span></label>
+                    <input type="file" name="imagen" accept="image/*"
+                           class="w-full border border-soft-gray rounded-lg px-4 py-2 focus:ring-2 focus:ring-pro-blue outline-none transition-colors">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-dark-teal mb-2">Precio</label>
+                        <input type="number" name="precio" step="0.01" min="0" required
+                               class="w-full border border-soft-gray rounded-lg px-4 py-2 focus:ring-2 focus:ring-pro-blue outline-none transition-colors" 
+                               placeholder="0.00">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-dark-teal mb-2">Stock</label>
+                        <input type="number" name="stock" min="0" required
+                               class="w-full border border-soft-gray rounded-lg px-4 py-2 focus:ring-2 focus:ring-pro-blue outline-none transition-colors" 
+                               placeholder="0">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-dark-teal mb-2">Categoría</label>
+                    <select name="fk_categoria" required
+                            class="w-full border border-soft-gray rounded-lg px-4 py-2 focus:ring-2 focus:ring-pro-blue bg-white outline-none transition-colors">
+                        <option value="">Seleccione una categoría</option>
+                        {% for cat_id, cat_nombre in categorias.items() %}
+                            <option value="{{ cat_id }}">{{ cat_nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-dark-teal mb-2">¿Es un producto peligroso?</label>
+                    <div class="flex items-center">
+                        <input type="checkbox" name="peligroso" id="peligroso" value="1"
+                               class="w-4 h-4 text-pro-blue bg-gray-100 border-gray-300 rounded focus:ring-pro-blue focus:ring-2 outline-none">
+                        <label for="peligroso" class="ml-2 text-sm text-gray-700">
+                            Marcar si el producto requiere manejo especial
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 pt-4">
+                    <button type="button" id="cancelModalBtn" 
+                            class="flex-1 bg-soft-gray hover:bg-gray-500 text-white py-3 rounded-lg transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" 
+                            class="flex-1 bg-pro-blue hover:bg-dark-teal text-white py-3 rounded-lg transition-colors">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div id="deleteProductModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 transform scale-95 transition-transform duration-300 overflow-hidden">
+            <div class="p-6 text-center">
+                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
+                    <svg class="h-10 w-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">Eliminar Producto</h3>
+                <p class="text-sm text-gray-500 mb-6" id="deleteProductMessage">¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.</p>
+                
+                <form id="deleteProductForm" method="POST" action="">
+                    <div class="flex gap-3 justify-center">
+                        <button type="button" onclick="closeDeleteProductModal()" class="flex-1 bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors">Cancelar</button>
+                        <button type="submit" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-700 transition-colors">Sí, eliminar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/panel_productos.js') }}"></script>
+     
+
+</body>
+</html>

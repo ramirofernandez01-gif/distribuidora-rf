@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden py-20">
+    <!-- Abstract Background Shapes -->
+    <div class="absolute top-20 right-0 w-[600px] h-[600px] bg-gradient-to-br from-pro-blue/20 to-light-teal/20 rounded-full blur-[100px] -z-10 mix-blend-multiply animate-pulse-slow"></div>
+    <div class="absolute bottom-0 left-[-100px] w-[500px] h-[500px] bg-gradient-to-tr from-warm-green/20 to-teal-400/20 rounded-full blur-[80px] -z-10 mix-blend-multiply animate-float"></div>
+
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            <!-- Hero Text -->
+            <div class="flex-1 text-center lg:text-left z-10 animate-fade-in-up">
+                <div class="inline-block px-4 py-1.5 rounded-full glass-panel border-pro-blue/20 text-pro-blue font-semibold text-sm mb-6">
+                    🔧 Tu proveedor de confianza en repuestos
+                </div>
+                <h1 class="text-5xl md:text-7xl font-display font-extrabold text-dark-teal leading-tight mb-6">
+                    Repuestos de calidad,<br/>
+                    <span class="text-gradient">para cada vehículo</span>
+                </h1>
+                <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                    Más de 20.000 repuestos originales, nacionales e importados para todas las marcas y modelos. Distribuidores directos de las marcas líderes del mercado automotriz.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                    <a href="{{ url_for('products.list_products') }}" class="w-full sm:w-auto px-8 py-4 bg-pro-blue text-white rounded-2xl font-bold hover:bg-dark-teal transition-all duration-300 shadow-glow-blue hover:-translate-y-1 flex items-center justify-center gap-2">
+                        Ver Catálogo
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </a>
+                    <a href="{{ url_for('main.about') }}" class="w-full sm:w-auto px-8 py-4 glass-panel text-slate-700 rounded-2xl font-bold hover:bg-white hover:shadow-glass-hover transition-all duration-300 hover:-translate-y-1 text-center">
+                        Conoce Distribuidora RF
+                    </a>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-3 gap-6 mt-16 pt-8 border-t border-slate-200/60">
+                    <div>
+                        <h4 class="text-3xl font-display font-bold text-dark-teal">+20.000</h4>
+                        <p class="text-sm text-slate-500 font-medium mt-1">Repuestos</p>
+                    </div>
+                    <div>
+                        <h4 class="text-3xl font-display font-bold text-dark-teal">Todas</h4>
+                        <p class="text-sm text-slate-500 font-medium mt-1">Las Marcas</p>
+                    </div>
+                    <div>
+                        <h4 class="text-3xl font-display font-bold text-dark-teal">Envíos</h4>
+                        <p class="text-sm text-slate-500 font-medium mt-1">A todo el país</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Image/Graphic -->
+            <div class="flex-1 relative w-full max-w-lg lg:max-w-none animate-fade-in-up" style="animation-delay: 0.2s;">
+                <div class="relative w-full aspect-square max-w-[500px] mx-auto">
+                    <!-- Decoraciones flotantes -->
+                    <div class="absolute top-10 -left-10 w-24 h-24 glass-card rounded-2xl shadow-xl border-white flex items-center justify-center z-20 animate-float" style="animation-delay: 0.5s;">
+                        <svg class="w-10 h-10 text-pro-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                    </div>
+                    <div class="absolute bottom-10 -right-5 w-32 h-16 glass-card rounded-xl shadow-xl flex items-center gap-3 px-4 z-20 animate-float" style="animation-delay: 1.5s;">
+                        <div class="w-8 h-8 rounded-full bg-warm-green/20 flex items-center justify-center text-warm-green font-bold">✓</div>
+                        <span class="text-sm font-bold text-slate-700">Stock Listo</span>
+                    </div>
+
+                    <!-- Imagen Central -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-pro-blue to-light-teal rounded-[3rem] rotate-6 opacity-20 blur-lg"></div>
+                    <div class="absolute inset-0 bg-white rounded-[3rem] p-4 shadow-premium border border-slate-100/50 overflow-hidden transform -rotate-3 transition-transform duration-500 hover:rotate-0">
+                        <div class="w-full h-full bg-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center border border-slate-100 relative overflow-hidden">
+                            <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#2563EB 2px, transparent 2px); background-size: 30px 30px;"></div>
+                            <svg class="w-40 h-40 text-pro-blue z-10 mb-6 drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <h3 class="text-2xl font-display font-bold text-dark-teal z-10">Catálogo Completo</h3>
+                            <p class="text-slate-500 text-sm z-10">Originales e importados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-24 bg-white relative">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="text-center mb-16 scroll-reveal">
+            <h2 class="text-sm font-bold text-pro-blue tracking-widest uppercase mb-3">Por qué elegirnos</h2>
+            <h3 class="text-4xl md:text-5xl font-display font-bold text-dark-teal">Nuestra promesa de valor</h3>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Feature 1 -->
+            <div class="glass-card rounded-3xl p-8 hover:-translate-y-3 transition-all duration-500 group scroll-reveal border border-slate-100">
+                <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-6 group-hover:bg-pro-blue group-hover:text-white text-pro-blue transition-colors duration-300 shadow-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                </div>
+                <h4 class="text-xl font-bold text-dark-teal mb-3">+20.000 Repuestos</h4>
+                <p class="text-slate-500 leading-relaxed">Amplio catálogo de repuestos originales, nacionales e importados para todas las marcas y modelos de vehículos.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="glass-card rounded-3xl p-8 hover:-translate-y-3 transition-all duration-500 group scroll-reveal border border-slate-100" style="transition-delay: 100ms;">
+                <div class="w-16 h-16 rounded-2xl bg-green-50 flex items-center justify-center mb-6 group-hover:bg-warm-green group-hover:text-white text-warm-green transition-colors duration-300 shadow-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h4 class="text-xl font-bold text-dark-teal mb-3">Marcas Líderes</h4>
+                <p class="text-slate-500 leading-relaxed">Distribuidores oficiales de las marcas más reconocidas del mercado: Mahle, Dayco, FAG, Gates, y muchas más.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="glass-card rounded-3xl p-8 hover:-translate-y-3 transition-all duration-500 group scroll-reveal border border-slate-100" style="transition-delay: 200ms;">
+                <div class="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center mb-6 group-hover:bg-light-teal group-hover:text-white text-light-teal transition-colors duration-300 shadow-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <h4 class="text-xl font-bold text-dark-teal mb-3">Asesoramiento Técnico</h4>
+                <p class="text-slate-500 leading-relaxed">Equipo especializado para ayudarte a encontrar el repuesto exacto para tu vehículo. Más de 20 años de experiencia.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="glass-card rounded-3xl p-8 hover:-translate-y-3 transition-all duration-500 group scroll-reveal border border-slate-100" style="transition-delay: 300ms;">
+                <div class="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-6 group-hover:bg-slate-700 group-hover:text-white text-slate-600 transition-colors duration-300 shadow-sm">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+                </div>
+                <h4 class="text-xl font-bold text-dark-teal mb-3">Envíos a Todo el País</h4>
+                <p class="text-slate-500 leading-relaxed">Despachamos a cualquier punto de Argentina. Entrega rápida y segura con seguimiento en tiempo real.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call To Action -->
+<section class="py-20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-dark-teal"></div>
+    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+    
+    <div class="container mx-auto px-6 max-w-5xl relative z-10 text-center scroll-reveal">
+        <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Encontrá el repuesto que necesitás</h2>
+        <p class="text-xl text-slate-300 mb-10 max-w-2xl mx-auto">Únete a miles de talleres y clientes particulares que confían en Distribuidora RF para mantener sus vehículos en perfectas condiciones.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ url_for('auth.login') }}" class="px-8 py-4 bg-pro-blue hover:bg-blue-600 text-white rounded-2xl font-bold text-lg transition-all duration-300 shadow-glow-blue transform hover:scale-105">
+                Crear una cuenta gratis
+            </a>
+            <a href="{{ url_for('products.list_products') }}" class="px-8 py-4 glass-panel bg-white/10 text-white border-white/20 hover:bg-white/20 rounded-2xl font-bold text-lg transition-all duration-300">
+                Ver catálogo completo
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

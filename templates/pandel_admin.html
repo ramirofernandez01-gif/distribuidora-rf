@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribuidora RF - Panel de Administración</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'smoke-white': '#F9FAFB',
+                        'pro-blue': '#2563EB',
+                        'light-blue': '#60A5FA',
+                        'soft-gray': '#94A3B8',
+                        'warm-green': '#22C55E',
+                        'light-teal': '#06B6D4',
+                        'dark-teal': '#1E3A8A',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(37,99,235,0.1); border-radius: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #2563EB, #60A5FA); border-radius: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: linear-gradient(to bottom, #1E3A8A, #2563EB); }
+        .task-item { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .task-item:hover { transform: translateY(-2px); }
+        .task-input:focus { box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    </style>
+</head>
+<body class="bg-smoke-white min-h-screen">
+
+    {% include 'components/nav.html' %}
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12">
+        
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-dark-teal mb-2">Dashboard Distribuidora RF</h2>
+            <p class="text-soft-gray">Panel de administración - Sistema de gestión integral</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            
+            <div class="bg-smoke-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-pro-blue">
+                <div class="bg-pro-blue p-6 text-smoke-white">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="bg-smoke-white bg-opacity-20 rounded-full p-4">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 7H18V6C18 5.45 17.55 5 17 5H7C6.45 5 6 5.45 6 6V7H5C3.9 7 3 7.9 3 9V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V9C21 7.9 20.1 7 19 7Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center">Productos</h3>
+                    <p class="text-center mt-2 opacity-90">Catálogo e inventario</p>
+                </div>
+                <div class="p-6 bg-smoke-white">
+                    <p class="text-pro-blue mb-6 text-center">Gestiona el catálogo de autopartes y controla el inventario.</p>
+                    <div class="space-y-2">
+                        <a href="{{ url_for('products.list_products') }}" 
+                           class="block w-full bg-pro-blue hover:bg-dark-teal text-smoke-white text-center py-2 px-6 rounded-lg font-semibold transition-colors duration-300">
+                            Ver Catálogo
+                        </a>
+                        <a href="{{ url_for('products.panel') }}" 
+                           class="block w-full bg-light-blue hover:bg-pro-blue text-smoke-white text-center py-2 px-6 rounded-lg font-semibold transition-colors duration-300">
+                            Gestionar Productos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-smoke-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden border border-light-teal">
+                <div class="bg-light-teal p-6 text-smoke-white">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="bg-smoke-white bg-opacity-20 rounded-full p-4">
+                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A2.996 2.996 0 0 0 17.05 7H16c-.8 0-1.54.31-2.1.83l-3.88 3.88C9.43 12.3 9 13.1 9 14v6h2v-6c0-.55.45-1 1-1h1v7h7zM12.5 11.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5S11 9.17 11 10s.67 1.5 1.5 1.5zM5.5 6C4.67 6 4 6.67 4 7.5S4.67 9 5.5 9 7 8.33 7 7.5 6.33 6 5.5 6zm.5 9.5c0-.83-.67-1.5-1.5-1.5S3 14.67 3 15.5 3.67 17 4.5 17 6 16.33 6 15.5zm0 0V18c0 1.1.9 2 2 2h3v-2H8v-2.5z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-center">Usuarios</h3>
+                    <p class="text-center mt-2 opacity-90">Gestión de usuarios</p>
+                </div>
+                <div class="p-6 bg-smoke-white">
+                    <p class="text-light-teal mb-6 text-center">Administra los usuarios del sistema, clientes y personal autorizado.</p>
+                    <div class="space-y-2">
+                        <a href="{{ url_for('users.panel') }}" 
+                           class="block w-full bg-light-blue hover:bg-light-teal text-smoke-white text-center py-2 px-6 rounded-lg font-semibold transition-colors duration-300">
+                            Ver usuarios del sistema
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mb-8">
+            <h3 class="text-2xl font-bold text-dark-teal mb-6">Estadísticas del Sistema</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-smoke-white rounded-xl shadow-lg p-6 border-l-4 border-pro-blue hover:shadow-xl transition-shadow">
+                    <div class="flex items-center">
+                        <div class="bg-pro-blue bg-opacity-10 rounded-full p-3 mr-4">
+                            <svg class="w-8 h-8 text-pro-blue" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 7H18V6C18 5.45 17.55 5 17 5H7C6.45 5 6 5.45 6 6V7H5C3.9 7 3 7.9 3 9V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V9C21 7.9 20.1 7 19 7Z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-dark-teal">{{ total_productos }}</p>
+                            <p class="text-soft-gray text-sm">Total Productos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-smoke-white rounded-xl shadow-lg p-6 border-l-4 border-light-teal hover:shadow-xl transition-shadow">
+                    <div class="flex items-center">
+                        <div class="bg-light-teal bg-opacity-10 rounded-full p-3 mr-4">
+                            <svg class="w-8 h-8 text-light-teal" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-dark-teal">${{ "{:,.0f}".format(ventas_mes_actual) }}</p>
+                            <p class="text-soft-gray text-sm">Ventas {{ nombre_mes }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-smoke-white rounded-xl shadow-lg p-6 border-l-4 border-light-blue hover:shadow-xl transition-shadow">
+                    <div class="flex items-center">
+                        <div class="bg-light-blue bg-opacity-10 rounded-full p-3 mr-4">
+                            <svg class="w-8 h-8 text-light-blue" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-bold text-dark-teal">{{ total_usuarios }}</p>
+                            <p class="text-soft-gray text-sm">Usuarios Registrados</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mb-8">
+            <div class="bg-gradient-to-br from-smoke-white via-gray-50 to-gray-100 rounded-3xl shadow-2xl border border-pro-blue/20 p-8 space-y-8">                
+                <div class="text-center space-y-4">
+                    <div class="flex items-center justify-center space-x-3">
+                        <div class="bg-gradient-to-r from-pro-blue to-light-blue p-3 rounded-2xl shadow-lg">
+                            <svg class="w-7 h-7 text-smoke-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-3xl font-bold bg-gradient-to-r from-pro-blue to-light-blue bg-clip-text text-transparent">
+                            To Do List Administrativo
+                        </h3>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-light-teal/10 to-pro-blue/10 rounded-2xl border border-light-teal/30 p-4">
+                        <p id="contadorTareas" class="text-lg text-dark-teal font-semibold">
+                            Tareas Pendientes: 0
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 border border-soft-gray/30 shadow-inner">
+                    <h4 class="text-lg font-semibold text-dark-teal mb-4 flex items-center">
+                        <span class="bg-pro-blue/10 p-2 rounded-lg mr-3">
+                            <svg class="w-5 h-5 text-pro-blue" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                        </span>
+                        Nueva Tarea
+                    </h4>
+                    
+                    <div class="flex gap-3">
+                        <input 
+                            id="tareaInput" 
+                            type="text" 
+                            placeholder="Describe tu tarea aquí..." 
+                            class="task-input flex-1 px-4 py-3 bg-smoke-white border border-soft-gray/50 rounded-xl text-dark-teal placeholder-soft-gray focus:ring-2 focus:ring-pro-blue/50 focus:border-pro-blue transition-all duration-200 outline-none shadow-sm"
+                        >
+                        <button 
+                            id="agregarBtn" 
+                            class="px-6 py-3 bg-gradient-to-r from-pro-blue to-light-blue hover:from-light-blue hover:to-light-teal text-smoke-white font-bold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg flex items-center space-x-2"
+                            title="Agregar tarea"
+                        >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                            <span>Agregar</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-lg font-semibold text-dark-teal flex items-center">
+                            <span class="bg-warm-green/10 p-2 rounded-lg mr-3">
+                                <svg class="w-5 h-5 text-warm-green" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                                </svg>
+                            </span>
+                            Mis Tareas
+                        </h4>
+                        
+                        <div class="flex space-x-2">
+                            <button 
+                                onclick="marcarTodasCompletadas()"
+                                class="px-3 py-2 bg-gradient-to-r from-warm-green/20 to-warm-green/10 hover:from-warm-green/30 hover:to-warm-green/20 text-warm-green hover:text-green-700 text-sm rounded-lg border border-warm-green/30 hover:border-warm-green/50 transition-all duration-200 transform hover:scale-105 flex items-center space-x-1 shadow-sm"
+                                title="Marcar todas como completadas"
+                            >
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                                </svg>
+                                <span>Todas</span>
+                            </button>
+                            <button 
+                                onclick="desmarcarTodas()"
+                                class="px-3 py-2 bg-gradient-to-r from-light-blue/20 to-light-blue/10 hover:from-light-blue/30 hover:to-light-blue/20 text-light-blue hover:text-blue-700 text-sm rounded-lg border border-light-blue/30 hover:border-light-blue/50 transition-all duration-200 transform hover:scale-105 flex items-center space-x-1 shadow-sm"
+                                title="Desmarcar todas las tareas"
+                            >
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                                </svg>
+                                <span>Reset</span>
+                            </button>
+                            <button 
+                                onclick="limpiarTodas()"
+                                class="px-3 py-2 bg-gradient-to-r from-red-500/20 to-red-500/10 hover:from-red-500/30 hover:to-red-500/20 text-red-500 hover:text-red-700 text-sm rounded-lg border border-red-500/30 hover:border-red-500/50 transition-all duration-200 transform hover:scale-105 flex items-center space-x-1 shadow-sm"
+                                title="Eliminar todas las tareas"
+                            >
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                </svg>
+                                <span>Limpiar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-smoke-white to-gray-50 rounded-2xl p-6 min-h-[350px] max-h-[450px] overflow-y-auto border border-soft-gray/30 shadow-inner custom-scrollbar">
+                        <ul id="listaTareas" class="space-y-3"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <h3 class="text-xl font-bold text-dark-teal mb-6 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-pro-blue" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M5 9.2H3V19H5V9.2ZM10.6 5H8.4V19H10.6V5ZM16.2 13H14V19H16.2V13ZM21.8 8H19.6V19H21.8V8Z"/>
+                </svg>
+                Análisis de Ventas Distribuidora RF
+            </h3>
+            
+            <div class="bg-gradient-to-r from-pro-blue via-light-blue to-light-teal rounded-lg p-8 text-center">
+                <div class="text-white">
+                    {% if crecimiento >= 0 %}
+                        <h4 class="text-2xl font-bold mb-2">Crecimiento Sostenido</h4>
+                        <p class="text-lg opacity-90">+{{ "{:.1f}".format(crecimiento) }}% comparado con {{ mes_anterior_nombre }}</p>
+                    {% else %}
+                        <h4 class="text-2xl font-bold mb-2">Comparativa Mensual</h4>
+                        <p class="text-lg opacity-90">{{ "{:.1f}".format(crecimiento) }}% comparado con {{ mes_anterior_nombre }}</p>
+                    {% endif %}
+                    
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                            <p class="text-3xl font-bold">${{ "{:,.0f}".format(ventas_mes_actual) }}</p>
+                            <p class="text-sm opacity-80">{{ nombre_mes }} (este mes)</p>
+                            {% set pct_actual = [((ventas_mes_actual / (ventas_mes_actual + ventas_mes_anterior)) * 100) if (ventas_mes_actual + ventas_mes_anterior) > 0 else 50] %}
+                            <div class="w-full bg-white bg-opacity-30 rounded-full h-2 mt-2">
+                                <div class="bg-warm-green h-2 rounded-full" style="width: {{ [pct_actual[0], 100]|min|int }}%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                            <p class="text-3xl font-bold">${{ "{:,.0f}".format(ventas_mes_anterior) }}</p>
+                            <p class="text-sm opacity-80">{{ mes_anterior_nombre }} (mes anterior)</p>
+                            <div class="w-full bg-white bg-opacity-30 rounded-full h-2 mt-2">
+                                <div class="bg-light-teal h-2 rounded-full w-3/5"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white bg-opacity-20 rounded-lg p-4">
+                            <p class="text-3xl font-bold">{{ productos_vendidos_mes }}</p>
+                            <p class="text-sm opacity-80">Productos Vendidos ({{ nombre_mes }})</p>
+                            <div class="w-full bg-white bg-opacity-30 rounded-full h-2 mt-2">
+                                <div class="bg-warm-green h-2 rounded-full" style="width: {{ [productos_vendidos_mes, 100]|min }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-center items-center space-x-4 text-sm">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 14l5-5 5 5z"/>
+                            </svg>
+                            <span>{% if crecimiento >= 0 %}Tendencia positiva{% else %}Tendencia a la baja{% endif %}</span>
+                        </div>
+                        <div class="opacity-75">•</div>
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span>Calidad Distribuidora RF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let tareas = JSON.parse(localStorage.getItem('adminTareas')) || [];
+
+        function guardarTareas() {
+            localStorage.setItem('adminTareas', JSON.stringify(tareas));
+        }
+
+        function renderizarTareas() {
+            const lista = document.getElementById('listaTareas');
+            const contador = document.getElementById('contadorTareas');
+            lista.innerHTML = '';
+            
+            const pendientes = tareas.filter(t => !t.completada).length;
+            contador.textContent = `Tareas Pendientes: ${pendientes}`;
+
+            if (tareas.length === 0) {
+                lista.innerHTML = `
+                    <li class="text-center text-soft-gray py-12">
+                        <svg class="w-12 h-12 mx-auto mb-3 opacity-40" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        <p class="text-lg">No hay tareas aún</p>
+                        <p class="text-sm mt-1">Agregar tareas para empezar</p>
+                    </li>`;
+                return;
+            }
+
+            tareas.forEach((tarea, index) => {
+                const li = document.createElement('li');
+                li.className = `task-item flex items-center gap-3 p-4 rounded-xl border ${tarea.completada ? 'bg-warm-green/5 border-warm-green/20' : 'bg-white border-soft-gray/20'} shadow-sm`;
+                li.innerHTML = `
+                    <input type="checkbox" ${tarea.completada ? 'checked' : ''} 
+                           onchange="toggleTarea(${index})"
+                           class="w-5 h-5 rounded text-pro-blue border-soft-gray focus:ring-pro-blue cursor-pointer flex-shrink-0">
+                    <span class="flex-1 text-dark-teal ${tarea.completada ? 'line-through opacity-50' : ''}">${tarea.texto}</span>
+                    <button onclick="eliminarTarea(${index})" class="text-red-400 hover:text-red-600 transition-colors flex-shrink-0">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        </svg>
+                    </button>
+                `;
+                lista.appendChild(li);
+            });
+        }
+
+        function agregarTarea() {
+            const input = document.getElementById('tareaInput');
+            const texto = input.value.trim();
+            if (!texto) return;
+            tareas.push({ texto, completada: false });
+            guardarTareas();
+            renderizarTareas();
+            input.value = '';
+            input.focus();
+        }
+
+        function toggleTarea(index) {
+            tareas[index].completada = !tareas[index].completada;
+            guardarTareas();
+            renderizarTareas();
+        }
+
+        function eliminarTarea(index) {
+            tareas.splice(index, 1);
+            guardarTareas();
+            renderizarTareas();
+        }
+
+        function marcarTodasCompletadas() {
+            tareas.forEach(t => t.completada = true);
+            guardarTareas();
+            renderizarTareas();
+        }
+
+        function desmarcarTodas() {
+            tareas.forEach(t => t.completada = false);
+            guardarTareas();
+            renderizarTareas();
+        }
+
+        function limpiarTodas() {
+            tareas = [];
+            guardarTareas();
+            renderizarTareas();
+        }
+
+        document.getElementById('agregarBtn').addEventListener('click', agregarTarea);
+        document.getElementById('tareaInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') agregarTarea();
+        });
+
+        renderizarTareas();
+    </script>
+     
+</body>
+</html>

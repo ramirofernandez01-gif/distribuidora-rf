@@ -1,0 +1,149 @@
+
+<!---COMPONENTE PARA MOSTRAR UN USUARIO DEL SISTEMA-->
+
+<div class="w-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden group h-full flex flex-col">
+    
+    <!-- Header de la card con avatar y información básica -->
+    <div class="bg-gradient-to-r from-light-teal to-pro-blue px-6 py-4 relative">
+        <!-- Avatar y nombre -->
+        <div class="flex items-center">
+            <div class="relative">
+                <!-- Avatar con fallback (siempre usar el icono por defecto ya que no hay campo avatar_url) -->
+                <div class="w-14 h-14 rounded-full bg-white bg-opacity-20 border-3 border-white shadow-lg flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                
+                <!-- Indicador de estado online (opcional) -->
+                <div class="absolute bottom-0 right-0 w-4 h-4 bg-warm-green rounded-full border-2 border-white"></div>
+            </div>
+            
+            <div class="ml-4 flex-1">
+                <h3 class="text-lg font-bold text-white leading-tight">{{ usuario.nombre }} {{ usuario.apellido }}</h3>
+                <p class="text-white text-sm opacity-90">@{{ usuario.username }}</p>
+            </div>
+        </div>
+
+        <!-- Badge de tipo de usuario -->
+        <div class="absolute top-4 right-4">
+            {% if usuario.es_admin %}
+                <span class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                    <svg class="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    ADMIN
+                </span>
+            {% else %}
+                <span class="bg-white bg-opacity-20 text-white px-3 py-1 rounded-full text-xs font-medium shadow-sm backdrop-blur-sm">
+                    <svg class="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                    </svg>
+                    CLIENTE
+                </span>
+            {% endif %}
+    </div>
+
+    </div>
+    
+    <!-- Contenido principal de la card -->
+    <div class="px-6 py-4 flex-1 flex flex-col">
+        
+        <!-- Información del usuario -->
+        <div class="space-y-3 mb-4 flex-1">
+            
+            <!-- Tipo de cuenta -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm2 6a2 2 0 11-4 0 2 2 0 014 0zm8 0a2 2 0 11-4 0 2 2 0 014 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-sm text-gray-600">Tipo de cuenta:</span>
+                </div>
+                {% if usuario.es_empresa %}
+                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                        🏢 Empresa
+                    </span>
+                {% else %}
+                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                        👤 Particular
+                    </span>
+                {% endif %}
+            </div>
+
+            <!-- DNI y Email -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zM8 6a2 2 0 114 0v1H8V6z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-sm text-gray-600">DNI:</span>
+                </div>
+                <span class="text-sm font-medium text-gray-800">{{ usuario.dni }}</span>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="text-sm text-gray-600">Email:</span>
+                </div>
+                <span class="text-sm font-medium text-gray-800 truncate max-w-[150px]" title="{{ usuario.email }}">{{ usuario.email }}</span>
+            </div>
+
+            <!-- Dirección -->
+            <div class="flex items-start justify-between">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-sm text-gray-600">Dirección:</span>
+                </div>
+                <span class="text-sm font-medium text-gray-800 text-right flex-1 ml-2">{{ usuario.direccion }}</span>
+            </div>
+
+            <!-- Tipo de usuario detallado -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 text-gray-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-sm text-gray-600">Rol:</span>
+                </div>
+                <span class="text-sm font-medium text-gray-800">
+                    {% if usuario.es_admin %}
+                        Administrador
+                    {% elif usuario.es_empresa %}
+                        Cliente Empresa
+                    {% else %}
+                        Cliente Particular
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- Botones de acción para administración -->
+        {% if not usuario.es_admin %}
+        <div class="flex gap-2 pt-4 border-t border-gray-100">
+            <button onclick="openEditModal({{ usuario.id }}, '{{ usuario.username }}', '{{ usuario.email }}', '{{ usuario.nombre }}', '{{ usuario.apellido }}', '{{ usuario.dni }}', '{{ usuario.direccion }}')" class="flex-1 bg-light-teal hover:bg-pro-blue text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center cursor-pointer">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Editar
+            </button>
+            <button onclick="deleteUser({{ usuario.id }})" class="flex-1 bg-red-50 hover:bg-red-500 text-red-500 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center cursor-pointer">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Eliminar
+            </button>
+        </div>
+        {% else %}
+        <div class="pt-4 border-t border-gray-100 text-center text-xs text-gray-400">
+            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            No se puede editar ni eliminar al Administrador
+        </div>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,352 @@
+<!---CARD PARA EL PRODUCTO CON EFECTO FLIP-->
+
+<div class="flip-card group cursor-pointer" data-producto-id="{{ producto.id }}" data-category="{{ categorias.get(producto.fk_categoria, 'Sin categoría')|lower }}">
+    <div class="flip-card-inner">
+        
+        <!-- CARA FRONTAL DE LA CARD -->
+        <div class="flip-card-front bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative overflow-hidden">
+          
+
+
+
+            <!-- Área de imagen del producto -->
+            <div class="h-52 bg-gray-50 border-b border-gray-100 relative overflow-hidden">
+                <!-- Imagen del producto -->
+                <img src="{{ url_for('static', filename='images/productos/' + producto.nombre|lower|replace(' ', '_')|replace('/', '_') + '.jpg') }}" 
+                     alt="{{ producto.nombre }}" 
+                     class="producto-image w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                     onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-content').style.display='flex';">
+                
+                <!-- Placeholder para imagen -->
+                <div class="placeholder-content absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col items-center justify-center hidden">
+                    <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mb-3">
+                        <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <p class="text-gray-500 text-sm font-medium">Sin Imagen</p>
+                </div>
+
+                <!-- Badge de categoría sobre la imagen -->
+                <div class="absolute top-3 left-3">
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white bg-opacity-95 text-gray-700 shadow-sm backdrop-blur-sm">
+                        {{ categorias.get(producto.fk_categoria, 'Sin categoría') }}
+                    </span>
+                </div>
+
+                <!-- Badge de precio -->
+                <div class="absolute bottom-3 right-3">
+                    <span class="bg-pro-blue text-white px-3 py-1.5 rounded-lg text-base font-bold shadow-lg backdrop-blur-sm">
+                        ${{ "%.2f"|format(producto.precio) }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Contenido principal de la card -->
+            <div class="p-3 flex flex-col justify-between" style="height: calc(100% - 13rem);">
+                <!-- Información básica del producto -->
+                <div>
+                    <h3 class="text-base font-bold text-dark-teal leading-tight mb-2">{{ producto.nombre }}</h3>
+                    
+                    <!-- Stock y disponibilidad compacto -->
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-1">
+                            <svg class="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm2.5 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm6.207.293a1 1 0 00-1.414 0l-6 6a1 1 0 101.414 1.414l6-6a1 1 0 000-1.414zM12.5 10a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-xs text-gray-500">{{ producto.stock }} ud.</span>
+                        </div>
+                        
+                        {% if producto.stock > 0 %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-warm-green bg-opacity-20 text-warm-green">
+                                <div class="w-1.5 h-1.5 bg-warm-green rounded-full mr-1 animate-pulse"></div>
+                                Disponible
+                            </span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                <div class="w-1.5 h-1.5 bg-red-500 rounded-full mr-1"></div>
+                                Sin Stock
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Hint para más información -->
+                <div class="text-center text-xs text-gray-400 mb-2">
+                    <span class="inline-flex items-center">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Click para más información
+                    </span>
+                </div>
+
+                <!-- Botón de agregar al carrito -->
+                {% if current_user.is_authenticated and not current_user.es_admin %}
+                    {% if producto.stock > 0 %}
+                            <!-- Usuario puede comprar el producto -->
+                            <button onclick="addToCart({{ producto.id }}, this)" class="add-to-cart-btn w-full bg-gradient-to-r from-light-teal to-pro-blue hover:from-pro-blue hover:to-dark-teal text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center group">
+                                <svg class="w-5 h-5 mr-2 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                Agregar al Carrito
+                            </button>
+                    {% else %}
+                        <!-- Producto sin stock -->
+                        <button disabled class="w-full bg-gray-200 text-gray-400 font-semibold py-3 px-6 rounded-xl cursor-not-allowed flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636"/>
+                            </svg>
+                            No Disponible
+                        </button>
+                    {% endif %}
+                {% elif current_user.is_authenticated and current_user.es_admin %}
+                    <!-- Vista de administrador -->
+                    <div class="bg-gradient-to-r from-soft-gray to-gray-400 text-white font-medium py-2 px-4 rounded-lg text-center text-sm">
+                        <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                        </svg>
+                        Vista de Administrador
+                    </div>
+                {% else %}
+                    <!-- Usuario no autenticado -->
+                    <a href="{{ url_for('auth.login') }}" class="w-full bg-gradient-to-r from-warm-green to-light-teal hover:from-light-teal hover:to-warm-green text-white font-semibold py-3 px-2 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center group text-decoration-none text-sm text-center leading-tight">
+                        <svg class="w-5 h-5 mr-1.5 shrink-0 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                        </svg>
+                        <span>Iniciar Sesión<br class="hidden sm:block lg:hidden"> para Comprar</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- CARA TRASERA DE LA CARD -->
+        <div class="flip-card-back bg-gradient-to-br from-light-teal to-pro-blue rounded-xl shadow-xl border border-gray-100 relative overflow-hidden">
+            
+            <!-- Botón para volver -->
+            <div class="absolute top-3 right-3 z-20">
+                <div class="bg-white bg-opacity-20 rounded-full p-1.5 hover:bg-opacity-30 transition-all duration-200 shadow-sm">
+                    <svg class="w-3.5 h-3.5 text-white flip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="h-full flex flex-col p-4 text-white">
+                <!-- Header compacto con título -->
+                <div class="mb-3">
+                    <h4 class="text-lg font-bold mb-1">{{ producto.nombre }}</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs opacity-80">{{ categorias.get(producto.fk_categoria, 'Sin categoría') }}</span>
+                        <span class="text-xl font-bold">${{ "%.2f"|format(producto.precio) }}</span>
+                    </div>
+                </div>
+
+                <!-- Información detallada compacta -->
+                <div class="flex-grow space-y-3">
+                    
+                    <!-- Descripción del producto -->
+                    {% if producto.descripcion %}
+                        <div class="bg-white bg-opacity-10 rounded-lg p-2.5 backdrop-blur-sm">
+                            <h5 class="font-semibold mb-1.5 flex items-center text-sm">
+                                <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                Descripción
+                            </h5>
+                            <p class="text-xs leading-relaxed opacity-90">{{ producto.descripcion }}</p>
+                        </div>
+                    {% endif %}
+
+                    <!-- Información de stock -->
+                    <div class="bg-white bg-opacity-10 rounded-lg p-2.5 backdrop-blur-sm">
+                        <h5 class="font-semibold mb-1.5 flex items-center text-sm">
+                            <svg class="w-3.5 h-3.5 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm2.5 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm6.207.293a1 1 0 00-1.414 0l-6 6a1 1 0 101.414 1.414l6-6a1 1 0 000-1.414zM12.5 10a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" clip-rule="evenodd"/>
+                            </svg>
+                            Inventario
+                        </h5>
+                        <div class="flex items-center justify-between text-xs">
+                            <span>Stock disponible:</span>
+                            <span class="font-bold">{{ producto.stock }} unidades</span>
+                        </div>
+                        <div class="flex items-center justify-between text-xs mt-1">
+                            <span>Estado:</span>
+                            {% if producto.stock > 0 %}
+                                <span class="bg-green-400 bg-opacity-30 px-1.5 py-0.5 rounded text-xs font-medium">
+                                    ✓ Disponible
+                                </span>
+                            {% else %}
+                                <span class="bg-red-400 bg-opacity-30 px-1.5 py-0.5 rounded text-xs font-medium">
+                                    ✗ Sin Stock
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- Footer compacto con hint -->
+                <div class="mt-3 text-center text-xs opacity-70">
+                    <span class="inline-flex items-center">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Click para volver
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos CSS para el efecto flip -->
+<style>
+.flip-card {
+    background-color: transparent;
+    width: 100%;
+    height: 380px; /* Reducido de 480px a 380px */
+    perspective: 1000px;
+    margin-bottom: 15px; /* Reducido el espaciado */
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.flip-card-front {
+    z-index: 2;
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+    z-index: 1;
+}
+
+.flip-card:hover .flip-icon {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+}
+
+/* Optimización de la proporción imagen/contenido */
+.flip-card-front .h-44 {
+    height: 11rem; /* ~176px - 46% de la card */
+}
+
+.flip-card-front .h-52 {
+    height: 13rem; /* ~208px - 55% de la card */
+}
+
+/* Animaciones para las imágenes */
+.producto-image {
+    transition: all 0.3s ease;
+}
+
+.producto-image:hover {
+    transform: scale(1.05);
+}
+
+.placeholder-content {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Estilos específicos para badges sobre imagen */
+.flip-card-front .absolute {
+    backdrop-filter: blur(4px);
+}
+
+/* Mejoras para el contenido de la cara trasera */
+.flip-card-back .space-y-4 > * + * {
+    margin-top: 1rem;
+}
+
+/* Responsividad mejorada */
+@media (max-width: 768px) {
+    .flip-card {
+        height: 320px; /* Más compacto en móviles */
+    }
+    
+    .flip-card-front .h-44 {
+        height: 9rem;
+    }
+    
+    .flip-card-front .h-52 {
+        height: 10rem;
+    }
+    
+    .flip-card-front .p-3 {
+        padding: 0.5rem;
+    }
+    
+    .flip-card-back .p-6 {
+        padding: 0.75rem;
+    }
+    
+    .flip-card-back .space-y-4 > * + * {
+        margin-top: 0.5rem;
+    }
+}
+
+/* Prevenir overflow en texto largo */
+.flip-card h3, .flip-card h4 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Mejoras en las transiciones */
+.flip-card button, .flip-card a {
+    transition: all 0.3s ease;
+}
+
+.flip-card button:hover, .flip-card a:hover {
+    transform: translateY(-2px);
+}
+
+/* Optimización del área de contenido */
+.flip-card-front .p-3 {
+    padding: 0.75rem;
+}
+
+/* Sombras y efectos de profundidad */
+.flip-card-back .bg-white.bg-opacity-10 {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejora la densidad de información */
+.flip-card .text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+.flip-card .text-base {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+</style>
+
+<script src="{{ url_for('static', filename='js/producto.js') }}"></script>

@@ -1,0 +1,386 @@
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribuidora RF - Panel de Usuarios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'smoke-white': '#F9FAFB',        // Blanco humo (fondo general)
+                        'pro-blue': '#2563EB',           // Azul profesional (elementos principales)
+                        'light-blue': '#60A5FA',         // Azul claro (suavizar elementos)
+                        'soft-gray': '#94A3B8',          // Gris suave (equilibrio neutral)
+                        'warm-green': '#22C55E',         // Verde cálido (acentos positivos)
+                        'light-teal': '#06B6D4',         // Turquesa claro (variedad)
+                        'dark-teal': '#1E3A8A',          // Azul petróleo (solo acentos mínimos)
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav-liquid-glass.css') }}">
+</head>
+<body class="bg-smoke-white min-h-screen">
+    
+    <!-- Include Navigation Component -->
+    {% include 'components/nav.html' %}
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 pt-28 pb-8">
+        
+        <!-- Header Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-dark-teal mb-2">Panel de <span class="text-light-blue">Usuarios</span> Distribuidora RF</h1>
+                    <p class="text-soft-gray">Gestión completa de usuarios y clientes registrados</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                     <!--Section-->
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Total Usuarios -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-light-teal">
+                <div class="flex items-center">
+                    <div class="bg-light-teal bg-opacity-10 rounded-full p-3 mr-4">
+                        <svg class="w-8 h-8 text-light-teal" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A2.996 2.996 0 0 0 17.05 7H16c-.8 0-1.54.31-2.1.83l-3.88 3.88C9.43 12.3 9 13.1 9 14v6h2v-6c0-.55.45-1 1-1h1v7h7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">{{ usuarios|length if usuarios else 0 }}</h3>
+                        <p class="text-soft-gray text-sm">Total Usuarios</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Administradores -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-pro-blue">
+                <div class="flex items-center">
+                    <div class="bg-pro-blue bg-opacity-10 rounded-full p-3 mr-4">
+                        <svg class="w-8 h-8 text-pro-blue" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">
+                            {% set admin_count = usuarios|selectattr('es_admin')|list|length if usuarios else 0 %}
+                            {{ admin_count }}
+                        </h3>
+                        <p class="text-soft-gray text-sm">Administradores</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clientes -->
+            <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-light-blue">
+                <div class="flex items-center">
+                    <div class="bg-light-blue bg-opacity-10 rounded-full p-3 mr-4">
+                        <svg class="w-8 h-8 text-light-blue" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-800">
+                            {% set cliente_count = usuarios|selectattr('es_cliente')|list|length if usuarios else 0 %}
+                            {{ cliente_count }}
+                        </h3>
+                        <p class="text-soft-gray text-sm">Clientes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Usuarios -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Usuarios Registrados</h2>
+                    <p class="text-soft-gray">Lista completa de usuarios del sistema Distribuidora RF</p>
+                    <p class="text-sm text-gray-500 mt-1">
+                        <span class="inline-flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                            </svg>
+                            {{ usuarios|length if usuarios else 0 }} usuario{{ 's' if usuarios and usuarios|length != 1 else '' }} registrado{{ 's' if usuarios and usuarios|length != 1 else '' }}
+                        </span>
+                    </p>
+                </div>
+                <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+                    <!-- Filtros -->
+                    {% if usuarios and usuarios|length > 0 %}
+                    <div class="flex gap-2">
+                        <select id="filter-type" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pro-blue focus:border-pro-blue outline-none transition-shadow">
+                            <option value="">Todos los tipos</option>
+                            <option value="admin">Administradores</option>
+                            <option value="empresa">Empresas</option>
+                            <option value="particular">Particulares</option>
+                        </select>
+                        <select id="sort-type" class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-pro-blue focus:border-pro-blue outline-none transition-shadow">
+                            <option value="">Ordenar por</option>
+                            <option value="name">Nombre A-Z</option>
+                            <option value="name-desc">Nombre Z-A</option>
+                        </select>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Grid de Usuarios Mejorado -->
+            {% if usuarios and usuarios|length > 0 %}
+                <div class="users-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4" id="users-container">
+                    {% for usuario in usuarios %}
+                        <div class="user-card" data-name="{{ usuario.nombre|lower }} {{ usuario.apellido|lower }}" data-type="{% if usuario.es_admin %}admin{% elif usuario.es_empresa %}empresa{% else %}particular{% endif %}">
+                            {% include 'components/usuario.html' %}
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Paginación (opcional para el futuro) -->
+                {% if usuarios|length > 12 %}
+                <div class="flex justify-center mt-8 pt-6 border-t border-gray-200">
+                    <nav class="flex items-center space-x-2">
+                        <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                            Anterior
+                        </button>
+                        <span class="px-3 py-2 text-sm font-medium text-white bg-pro-blue border border-pro-blue rounded-md">
+                            1
+                        </span>
+                        <button class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                            Siguiente
+                        </button>
+                    </nav>
+                </div>
+                {% endif %}
+                
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Modal de Edición de Usuario -->
+    <div id="editUserModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 transform scale-95 transition-transform duration-300 overflow-hidden">
+            <div class="bg-gradient-to-r from-light-teal to-pro-blue px-6 py-4 flex justify-between items-center">
+                <h3 class="text-white font-bold text-lg flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    Editar Usuario
+                </h3>
+                <button onclick="closeEditModal()" class="text-white hover:text-red-200 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <form id="editUserForm" onsubmit="submitEdit(event)" class="p-6 space-y-4">
+                <input type="hidden" id="editUserId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de Usuario</label>
+                        <input type="text" id="editUserUsername" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pro-blue outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+                        <input type="email" id="editUserEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pro-blue outline-none" required>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre (Real)</label>
+                        <input type="text" id="editUserNombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pro-blue outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
+                        <input type="text" id="editUserApellido" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pro-blue outline-none" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">DNI</label>
+                    <input type="number" id="editUserDni" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pro-blue outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                    <input type="text" id="editUserDireccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pro-blue outline-none" required>
+                </div>
+                <div class="pt-4 flex gap-3">
+                    <button type="button" onclick="closeEditModal()" class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-pro-blue text-white py-2 rounded-lg font-medium hover:bg-dark-teal transition-colors">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div id="deleteUserModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 transform scale-95 transition-transform duration-300 overflow-hidden">
+            <div class="p-6 text-center">
+                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
+                    <svg class="h-10 w-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">Eliminar Usuario</h3>
+                <p class="text-sm text-gray-500 mb-6">¿Estás seguro de que deseas eliminar a este usuario? Esta acción no se puede deshacer y borrará todos sus datos permanentemente.</p>
+                
+                <input type="hidden" id="deleteUserId">
+                
+                <div class="flex gap-3 justify-center">
+                    <button type="button" onclick="closeDeleteModal()" class="flex-1 bg-white text-gray-700 border border-gray-300 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors">Cancelar</button>
+                    <button type="button" onclick="confirmDeleteUser()" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-700 transition-colors">Sí, eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lógica de modal y acciones de usuario
+        const editModal = document.getElementById('editUserModal');
+        const deleteModal = document.getElementById('deleteUserModal');
+        
+        function openEditModal(id, username, email, nombre, apellido, dni, direccion) {
+            document.getElementById('editUserId').value = id;
+            document.getElementById('editUserUsername').value = username;
+            document.getElementById('editUserEmail').value = email;
+            document.getElementById('editUserNombre').value = nombre;
+            document.getElementById('editUserApellido').value = apellido;
+            document.getElementById('editUserDni').value = dni;
+            document.getElementById('editUserDireccion').value = direccion;
+            
+            editModal.classList.remove('hidden');
+            setTimeout(() => {
+                editModal.classList.remove('opacity-0');
+                editModal.firstElementChild.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeEditModal() {
+            editModal.classList.add('opacity-0');
+            editModal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                editModal.classList.add('hidden');
+            }, 300);
+        }
+
+        function submitEdit(event) {
+            event.preventDefault();
+            const id = document.getElementById('editUserId').value;
+            const data = {
+                username: document.getElementById('editUserUsername').value,
+                email: document.getElementById('editUserEmail').value,
+                nombre: document.getElementById('editUserNombre').value,
+                apellido: document.getElementById('editUserApellido').value,
+                dni: document.getElementById('editUserDni').value,
+                direccion: document.getElementById('editUserDireccion').value
+            };
+
+            fetch(`/admin/users/${id}/edit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === 'success') {
+                    window.location.reload();
+                } else {
+                    alert(res.message || "Error al actualizar");
+                }
+            })
+            .catch(e => {
+                console.error(e);
+                alert("Error de conexión");
+            });
+        }
+
+        function deleteUser(id) {
+            document.getElementById('deleteUserId').value = id;
+            
+            deleteModal.classList.remove('hidden');
+            setTimeout(() => {
+                deleteModal.classList.remove('opacity-0');
+                deleteModal.firstElementChild.classList.remove('scale-95');
+            }, 10);
+        }
+        
+        function closeDeleteModal() {
+            deleteModal.classList.add('opacity-0');
+            deleteModal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => {
+                deleteModal.classList.add('hidden');
+            }, 300);
+        }
+
+        function confirmDeleteUser() {
+            const id = document.getElementById('deleteUserId').value;
+            
+            fetch(`/admin/users/${id}/delete`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === 'success') {
+                    window.location.reload();
+                } else {
+                    alert(res.message || "Error al eliminar");
+                    closeDeleteModal();
+                }
+            })
+            .catch(e => {
+                console.error(e);
+                alert("Error de conexión");
+                closeDeleteModal();
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const filterSelect = document.getElementById('filter-type');
+            const sortSelect = document.getElementById('sort-type');
+            const usersContainer = document.getElementById('users-container');
+            
+            if(!filterSelect || !sortSelect || !usersContainer) return;
+
+            function updateView() {
+                const filterValue = filterSelect.value;
+                const sortValue = sortSelect.value;
+                
+                let cards = Array.from(usersContainer.querySelectorAll('.user-card'));
+
+                // Filtrar
+                cards.forEach(card => {
+                    const cardType = card.dataset.type;
+                    if (filterValue === "" || filterValue === cardType) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Ordenar
+                if (sortValue === "name" || sortValue === "name-desc") {
+                    cards.sort((a, b) => {
+                        const nameA = a.dataset.name;
+                        const nameB = b.dataset.name;
+                        if (nameA < nameB) return sortValue === "name" ? -1 : 1;
+                        if (nameA > nameB) return sortValue === "name" ? 1 : -1;
+                        return 0;
+                    });
+
+                    // Reordenar en el DOM
+                    cards.forEach(card => usersContainer.appendChild(card));
+                }
+            }
+
+            filterSelect.addEventListener('change', updateView);
+            sortSelect.addEventListener('change', updateView);
+        });
+    </script>
+</body>
+</html>

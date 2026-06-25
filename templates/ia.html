@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Asistente IA - Distribuidora RF{% endblock %}
+
+{% block content %}
+<main class="container mx-auto px-6 py-12 max-w-7xl animate-fade-in-up relative z-10">
+    <!-- Header -->
+    <div class="mb-12 text-center max-w-3xl mx-auto">
+        <div class="w-20 h-20 bg-gradient-to-br from-pro-blue to-light-teal rounded-3xl mx-auto flex items-center justify-center mb-6 shadow-glow-blue animate-float">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-display font-bold text-dark-teal mb-4">Analizador de Experiencias IA</h1>
+        <p class="text-slate-500 text-lg">Nuestra inteligencia artificial analiza tus comentarios y reseñas sobre los repuestos en tiempo real para brindarte un servicio más personalizado.</p>
+    </div>
+
+    <!-- Error Message -->
+    {% if error %}
+        <div class="bg-red-50/80 border border-red-200 rounded-2xl p-4 mb-8 flex items-start gap-4 max-w-4xl mx-auto">
+            <div class="flex-shrink-0">
+                <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-red-800">Error en el análisis</h3>
+                <p class="text-sm text-red-700 mt-1">{{ error }}</p>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Layout -->
+    <div class="grid grid-cols-1 {% if prediction %}lg:grid-cols-2{% endif %} gap-8 max-w-6xl mx-auto">
+        
+        <!-- Formulario -->
+        <div class="{% if not prediction %}max-w-3xl mx-auto w-full{% endif %}">
+            <div class="glass-panel bg-white/90 rounded-[2rem] shadow-premium p-8 h-full border border-white">
+                <form method="post" action="{{ url_for('ia.predict') }}" class="h-full flex flex-col">
+                    <div class="flex-1 mb-6">
+                        <label for="text" class="block text-lg font-bold text-dark-teal mb-4">¿Qué opinas sobre nuestros repuestos?</label>
+                        <textarea 
+                            id="text" 
+                            name="text" 
+                            rows="{% if prediction %}10{% else %}8{% endif %}" 
+                            class="w-full px-5 py-4 border-2 border-slate-200 rounded-2xl focus:border-pro-blue focus:ring-4 focus:ring-pro-blue/10 transition-all resize-none text-slate-700 bg-slate-50/50 hover:bg-white"
+                            placeholder="Ejemplo: El kit de distribución llegó perfecto, la calidad es excelente y el envío fue muy rápido. Muy recomendable..."
+                            required>{{ text or "" }}</textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-pro-blue hover:bg-dark-teal text-white font-bold py-4 px-8 rounded-2xl shadow-glow-blue transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                        Analizar Texto
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        {% if prediction %}
+        <div class="animate-fade-in-up" style="animation-delay: 0.1s;">
+            <div class="glass-panel bg-white/90 rounded-[2rem] shadow-premium overflow-hidden border border-white h-full flex flex-col">
+                
+                <!-- Header Sentimiento -->
+                <div class="{% if prediction|lower|trim == 'positivo' %}bg-gradient-to-br from-warm-green to-green-600{% elif prediction|lower|trim == 'negativo' %}bg-gradient-to-br from-red-500 to-rose-600{% else %}bg-gradient-to-br from-yellow-400 to-orange-500{% endif %} px-8 py-6 text-white relative overflow-hidden">
+                    <!-- Deco -->
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+                    
+                    <div class="flex items-center justify-between relative z-10">
+                        <div>
+                            <p class="text-white/80 text-sm font-semibold uppercase tracking-wider mb-1">Resultado del Análisis</p>
+                            <h2 class="text-3xl font-display font-bold">Sentimiento {{ prediction|title }}</h2>
+                        </div>
+                        <div class="text-5xl">
+                            {% if prediction|lower|trim == 'positivo' %}😊{% elif prediction|lower|trim == 'negativo' %}😞{% else %}😐{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Probabilidades -->
+                <div class="p-8 flex-1 flex flex-col">
+                    <h3 class="text-lg font-bold text-dark-teal mb-6">Confianza del Modelo</h3>
+                    
+                    <div class="space-y-6">
+                        {% for cls, p in probs.items() %}
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-slate-700 capitalize">{{ cls|title }}</span>
+                                <span class="font-bold {% if cls|lower|trim == 'positivo' %}text-warm-green{% elif cls|lower|trim == 'negativo' %}text-red-500{% else %}text-yellow-500{% endif %}">
+                                    {{ (p * 100)|round(2) }}%
+                                </span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                                <div class="h-full rounded-full {% if cls|lower|trim == 'positivo' %}bg-warm-green{% elif cls|lower|trim == 'negativo' %}bg-red-500{% else %}bg-yellow-500{% endif %} transition-all duration-1000 ease-out" 
+                                     style="width: {{ (p * 100)|round(2) }}%">
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-auto pt-8 border-t border-slate-100 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-pro-blue flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <p class="text-sm text-slate-500 leading-relaxed">Modelo de IA entrenado para procesamiento de lenguaje natural. Los resultados son estimaciones basadas en patrones lingüísticos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

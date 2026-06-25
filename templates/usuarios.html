@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribuidora RF - Usuarios del Sistema</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'smoke-white': '#F9FAFB',        // Blanco humo (fondo general)
+                        'pro-blue': '#2563EB',           // Azul profesional (elementos principales)
+                        'light-blue': '#60A5FA',         // Azul claro (suavizar elementos)
+                        'soft-gray': '#94A3B8',          // Gris suave (equilibrio neutral)
+                        'warm-green': '#22C55E',         // Verde cálido (acentos positivos)
+                        'light-teal': '#06B6D4',         // Turquesa claro (variedad)
+                        'dark-teal': '#1E3A8A',          // Azul petróleo (solo acentos mínimos)
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-smoke-white min-h-screen">
+    
+    <!-- Include Navigation Component -->
+    {% include 'components/nav.html' %}
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        
+        <!-- Header Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-dark-teal mb-2">Usuarios del <span class="text-light-blue">Sistema</span> Distribuidora RF</h1>
+                    <p class="text-soft-gray">Lista completa de usuarios registrados en el sistema</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <a href="{{ url_for('users.add_user') }}" class="bg-light-teal hover:bg-pro-blue text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        Agregar Usuario
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Usuarios -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Usuarios Registrados</h2>
+                <p class="text-soft-gray">Total de usuarios: {{ usuarios|length if usuarios else 0 }}</p>
+            </div>
+
+            <!-- Grid de Usuarios -->
+            {% if usuarios and usuarios|length > 0 %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for usuario in usuarios %}
+                        {% include 'components/usuario.html' %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">No hay usuarios registrados</h3>
+                    <p class="text-gray-600 mb-4">Todavía no se han registrado usuarios en el sistema.</p>
+                    <a href="{{ url_for('users.add_user') }}" class="bg-light-teal hover:bg-pro-blue text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                        Registrar primer usuario
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

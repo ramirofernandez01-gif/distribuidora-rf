@@ -1,0 +1,106 @@
+<nav class="fixed w-full z-50 transition-all duration-300 bg-[#F9FAFB]/95 backdrop-blur-md border-b border-gray-200 shadow-sm" id="main-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            <!-- Logo -->
+            <div class="flex-shrink-0 flex items-center gap-3">
+                <a href="{{ url_for('main.home') }}" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-pro-blue to-light-teal flex items-center justify-center shadow-glow-blue group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-display font-bold text-dark-teal group-hover:text-pro-blue transition-colors">Distribuidora RF</h1>
+                        <p class="text-[10px] uppercase tracking-wider text-soft-gray font-semibold -mt-1">Repuestos & Autopartes</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="{{ url_for('main.home') }}" class="text-sm font-medium text-slate-600 hover:text-pro-blue hover-underline-animation transition-colors">Inicio</a>
+                <a href="{{ url_for('main.about') }}" class="text-sm font-medium text-slate-600 hover:text-pro-blue hover-underline-animation transition-colors">Nosotros</a>
+                <a href="{{ url_for('products.list_products') }}" class="text-sm font-medium text-slate-600 hover:text-pro-blue hover-underline-animation transition-colors">Catálogo</a>
+
+                {% if current_user.is_authenticated %}
+                    {% if not current_user.es_admin %}
+                        <a href="{{ url_for('users.perfil') }}" class="text-sm font-medium text-slate-600 hover:text-pro-blue hover-underline-animation transition-colors">Mi Perfil</a>
+                        <a href="{{ url_for('ia.ia') }}" class="text-sm font-medium text-slate-600 hover:text-pro-blue hover-underline-animation transition-colors">Asistente IA</a>
+                        
+                        {% if current_user.carrito and current_user.carrito|length > 0 %}
+                            <a href="{{ url_for('users.carrito') }}" class="relative group">
+                                <svg class="w-6 h-6 text-slate-600 group-hover:text-pro-blue transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <span class="absolute -top-2 -right-2 bg-warm-green text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">{{ current_user.carrito|length }}</span>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{{ url_for('admin.index') }}" class="text-sm font-bold text-pro-blue hover:text-dark-teal transition-colors">Panel Admin</a>
+                    {% endif %}
+                    
+                    <div class="h-6 w-px bg-slate-200"></div>
+                    
+                    <a href="{{ url_for('auth.logout') }}" class="px-5 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-600 hover:border-red-500 hover:text-red-500 hover:bg-red-50 transition-all duration-300">
+                        Cerrar Sesión
+                    </a>
+                {% else %}
+                    <div class="h-6 w-px bg-slate-200"></div>
+                    <a href="{{ url_for('auth.login') }}" class="px-6 py-2 rounded-full bg-dark-teal text-white text-sm font-medium hover:bg-pro-blue hover:shadow-glow-blue transition-all duration-300 transform hover:-translate-y-0.5">
+                        Iniciar Sesión
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-btn" class="text-slate-600 hover:text-pro-blue focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-slate-100">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a href="{{ url_for('main.home') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:text-pro-blue hover:bg-slate-50">Inicio</a>
+            <a href="{{ url_for('main.about') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:text-pro-blue hover:bg-slate-50">Nosotros</a>
+            <a href="{{ url_for('products.list_products') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:text-pro-blue hover:bg-slate-50">Catálogo</a>
+            
+            {% if current_user.is_authenticated %}
+                {% if not current_user.es_admin %}
+                    <a href="{{ url_for('users.perfil') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:text-pro-blue hover:bg-slate-50">Mi Perfil</a>
+                    <a href="{{ url_for('ia.ia') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-800 hover:text-pro-blue hover:bg-slate-50">Asistente IA</a>
+                    {% if current_user.carrito and current_user.carrito|length > 0 %}
+                        <a href="{{ url_for('users.carrito') }}" class="block px-3 py-2 rounded-md text-base font-medium text-pro-blue hover:bg-blue-50">Carrito ({{ current_user.carrito|length }})</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{{ url_for('admin.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-pro-blue hover:bg-blue-50">Panel Admin</a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 mt-4">Cerrar Sesión</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-dark-teal hover:bg-pro-blue mt-4">Iniciar Sesión</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<script>
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+        var menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    });
+
+    window.addEventListener('scroll', function() {
+        var nav = document.getElementById('main-nav');
+        if (window.scrollY > 20) {
+            nav.classList.add('shadow-glass');
+        } else {
+            nav.classList.remove('shadow-glass');
+        }
+    });
+</script>

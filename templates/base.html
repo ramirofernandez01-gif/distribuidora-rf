@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Distribuidora RF - Repuestos y Autopartes{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        'smoke-white': '#F3F4F6', // Ligeramente más gris
+                        'pro-blue': '#1E3A8A', // Azul más oscuro y mecánico
+                        'light-blue': '#3B82F6', 
+                        'soft-gray': '#64748B', // Gris más industrial
+                        'warm-green': '#F59E0B', // Cambiado a naranja de advertencia/precaución
+                        'light-teal': '#475569', // Gris oscuro metálico
+                        'dark-teal': '#0F172A', // Slate muy oscuro
+                        'glass-bg': 'rgba(255, 255, 255, 0.8)',
+                        'glass-border': 'rgba(255, 255, 255, 0.6)',
+                        // Original
+                        'clean-blue': '#1E40AF',
+                        'clean-green': '#D97706',
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(15, 23, 42, 0.08)',
+                        'glass-hover': '0 8px 32px 0 rgba(15, 23, 42, 0.15)',
+                        'premium': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                        'glow-blue': '0 0 20px rgba(30, 58, 138, 0.4)',
+                        'glow-green': '0 0 20px rgba(245, 158, 11, 0.4)',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: 0, transform: 'translateY(40px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-smoke-white min-h-screen text-slate-800 font-sans antialiased flex flex-col relative overflow-x-hidden selection:bg-pro-blue selection:text-white">
+    
+    <!-- Background Accents (Global) -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-slate-400/30 blur-3xl opacity-50 mix-blend-multiply"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/20 blur-3xl opacity-50 mix-blend-multiply"></div>
+    </div>
+
+    <!-- Navigation -->
+    {% include 'components/nav.html' %}
+
+    <!-- Main Content -->
+    <div class="flex-grow flex flex-col mt-20">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    {% include 'components/footer.html' %}
+
+    <!-- Botón Flotante Carrito -->
+    <a href="{{ url_for('users.carrito') }}" class="fixed bottom-6 right-6 bg-gradient-to-r from-pro-blue to-light-blue hover:from-light-blue hover:to-pro-blue text-white w-16 h-16 rounded-full flex items-center justify-center shadow-glow-blue transition-all duration-300 transform hover:-translate-y-2 hover:scale-110 z-[9999] group">
+        <svg class="w-7 h-7 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span id="floating-cart-badge" class="absolute top-0 right-0 bg-warm-green text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-white transform translate-x-1 -translate-y-1 hidden">
+            0
+        </span>
+    </a>
+
+    <!-- Global Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <script>
+        // Global intersection observer for fade-in animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in-up');
+                        entry.target.style.opacity = 1;
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.scroll-reveal').forEach((el) => {
+                el.style.opacity = 0; // hide initially
+                observer.observe(el);
+            });
+            
+            // Actualizar badge del carrito al cargar
+            updateCartBadge();
+        });
+
+        // Función para actualizar los badges del carrito
+        function updateCartBadge() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let totalItems = 0;
+            cart.forEach(item => { totalItems += item.quantity; });
+            
+            const floatingBadge = document.getElementById('floating-cart-badge');
+            if (floatingBadge) {
+                if (totalItems > 0) {
+                    floatingBadge.innerText = totalItems;
+                    floatingBadge.classList.remove('hidden');
+                } else {
+                    floatingBadge.classList.add('hidden');
+                }
+            }
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
